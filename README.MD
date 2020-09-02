@@ -47,8 +47,8 @@ npm run dev  # Optional, run the server in dev mode in which the app reloads on 
 Run in console folder
 
 ```bash
-- npm install # Install dependencies.
-- npm start   # Start developing the console, the server namespace will be assigned to localhost:3030.
+npm install # Install dependencies.
+npm start   # Start developing the console, the server namespace will be assigned to localhost:3030.
 ```
 
 ## Deploy Console
@@ -56,8 +56,8 @@ Run in console folder
 Run in console folder
 
 ```bash
-- npm run build;                      # Build console for production into dist folder.
-- cp -r dist ../server/public/console # Place console dist to server's public folder for static serving.
+npm run build;                      # Build console for production into dist folder.
+cp -r dist ../server/public/console # Place console dist to server's public folder for static serving.
 ```
 
 ## Login and try
