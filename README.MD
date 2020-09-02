@@ -14,11 +14,11 @@ The backend server of this webapp is built upon [FeathersJS](https://feathersjs.
 
 Please read FeathersJS' guide and doc before you get hands on this project.
 
-## A Umijs Console
+## An Ant Design Pro (V4) Console
 
-The web client of this webapp is built upon [UmiJS](https://umijs.org/), a pluggable enterprise-level react application framework.
+The web client of this webapp is built upon [Ant Design Pro V4](https://pro.ant.design/index-cn/), an out-of-box UI solution for enterprise applications.
 
-Please read UmiJS' guide and doc before you get hands on this project.
+Please read Ant Design Pro's guide and doc before you get hands on this project.
 
 ## Database Configration
 
