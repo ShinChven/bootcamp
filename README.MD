@@ -56,6 +56,6 @@ Run in console folder
 Run in console folder
 
 ```bash
-- npm run build; # Build console for production into dist folder.
+- npm run build;                      # Build console for production into dist folder.
 - cp -r dist ../server/public/console # Place console dist to server's public folder for static serving.
 ```
