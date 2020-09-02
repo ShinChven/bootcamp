@@ -37,9 +37,9 @@ This project uses [JSONWebToken, aka jwt,](https://jwt.io/) for authentication s
 Run in server folder
 
 ```bash
-npm install;  # Install dependencies.
-npm start;    # Run the server.
-npm run dev;  # Optional, run the server in dev mode in which the app reloads on code change.
+npm install  # Install dependencies.
+npm start    # Run the server.
+npm run dev  # Optional, run the server in dev mode in which the app reloads on code change.
 ```
 
 ### Console
@@ -47,8 +47,8 @@ npm run dev;  # Optional, run the server in dev mode in which the app reloads on
 Run in console folder
 
 ```bash
-- npm install; # Install dependencies.
-- npm start;   # Start developing the console, the server namespace will be assigned to localhost:3030.
+- npm install # Install dependencies.
+- npm start   # Start developing the console, the server namespace will be assigned to localhost:3030.
 ```
 
 ## Deploy Console
