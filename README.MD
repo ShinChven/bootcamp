@@ -59,3 +59,9 @@ Run in console folder
 - npm run build;                      # Build console for production into dist folder.
 - cp -r dist ../server/public/console # Place console dist to server's public folder for static serving.
 ```
+
+## Login and try
+
+After you started console development, web page shall popup automatically. If not, please visit `http://localhost:8000` in your browser manually.
+
+Please see preconfigred username and password in `/server/config/default.json`.
