@@ -60,6 +60,8 @@ npm run build;                      # Build console for production into dist fol
 cp -r dist ../server/public/console # Place console dist to server's public folder for static serving.
 ```
 
+After console is deployed, you should be able to visit it at `http://localhost:3030/console`.
+
 ## Login and try
 
 After you started console development, web page shall popup automatically. If not, please visit `http://localhost:8000` in your browser manually.
