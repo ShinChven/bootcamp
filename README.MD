@@ -1,12 +1,20 @@
 # Bootcamp
 
-## FeathersJS
+This is my own scaffolding for building JavaScript fullstack enterprise webapp.
+
+It is made of a nodejs backend in server folder and a react web client in console folder.
+
+I have done the basic setups, and I believe you can run this project straight forward after you configured database connection in `/server/config/default.json`'.
+
+To get your hands on this project, you should have basic knowledge of NodeJS and React.
+
+## A FeathersJS Server
 
 The backend server of this webapp is built upon [FeathersJS](https://feathersjs.com/), a framework for real-time applications and REST APIs.
 
 Please read FeathersJS' guide and doc before you get hands on this project.
 
-## Umijs
+## A Umijs Console
 
 The web client of this webapp is built upon [UmiJS](https://umijs.org/), a pluggable enterprise-level react application framework.
 
