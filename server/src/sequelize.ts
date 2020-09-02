@@ -1,5 +1,6 @@
 import { Sequelize } from 'sequelize';
 import { Application } from './declarations';
+import init from './init';
 
 export default function (app: Application) {
   const connectionString = app.get('mysql');
@@ -26,7 +27,9 @@ export default function (app: Application) {
     });
 
     // Sync to the database
-    app.set('sequelizeSync', sequelize.sync());
+    app.set('sequelizeSync', sequelize.sync().then(()=>{
+      app.configure(init);
+    }));
 
     return result;
   };

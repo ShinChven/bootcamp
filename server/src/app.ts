@@ -18,7 +18,6 @@ import appHooks from './app.hooks';
 import channels from './channels';
 import authentication from './authentication';
 import sequelize from './sequelize';
-import init from './init';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const app: Application = express(feathers());
@@ -55,6 +54,5 @@ app.use(express.errorHandler({ logger } as any));
 
 app.hooks(appHooks);
 
-app.configure(init);
 
 export default app;

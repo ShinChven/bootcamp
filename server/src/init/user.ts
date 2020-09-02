@@ -1,10 +1,8 @@
 import {Application} from "../declarations";
 import bcrypt from 'bcrypt';
-import {UserType} from "../models/users.model";
+import generator from 'generate-password';
 
-async function hashPassword(user: UserType) {
-
-  const password = user.password
+async function hashPassword(password: string): Promise<string> {
   const saltRounds = 10;
   return await new Promise((resolve, reject) => {
     bcrypt.hash(password, saltRounds, function (err, hash) {
@@ -25,9 +23,14 @@ export default async function (app: Application) {
       const init = app.get('init');
       const {user} = init;
       console.log(`initializing user: ${JSON.stringify(user)}`);
-      user.password = await hashPassword(user);
+      let password = generator.generate({
+        length: 10,
+        numbers: true
+      });
+      const userRawData = {email: user.email, password: user.password || password};
+      user.password = await hashPassword(userRawData.password);
       const initialized = await users.create(user);
-      console.log(`initialized user: ${JSON.stringify(initialized)}`);
+      console.log(`initialized user: ${JSON.stringify(userRawData)}`);
     }
   } catch (e) {
     console.error(e);
