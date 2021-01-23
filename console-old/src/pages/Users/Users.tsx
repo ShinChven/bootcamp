@@ -18,7 +18,7 @@ interface UsersProps {
 }
 
 interface UsersState {
-  users?: Array<User>
+  users?: User[]
   tablePagination: TablePaginationConfig
   loading: boolean
   setPasswordTarget?: User

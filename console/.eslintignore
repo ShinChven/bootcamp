@@ -2,4 +2,7 @@
 /scripts
 /config
 .history
-/public/
+public
+dist
+.umi
+mock

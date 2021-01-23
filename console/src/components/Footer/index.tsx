@@ -1,28 +1,29 @@
+import React from 'react';
+import { GithubOutlined } from '@ant-design/icons';
 import { DefaultFooter } from '@ant-design/pro-layout';
-import React, { PureComponent } from 'react';
 
-class Footer extends PureComponent {
-  render() {
-    return (
-      <DefaultFooter
-        copyright={`${new Date().getFullYear()} ShinChven`}
-        links={[
-          {
-            key: 'Ant Design Pro',
-            title: '使用 Ant Design Pro 构建',
-            href: 'https://pro.ant.design',
-            blankTarget: true,
-          },
-          {
-            key: 'Atlass.net',
-            title: 'ShinChven',
-            href: 'https://atlassc.net',
-            blankTarget: true,
-          },
-        ]}
-      />
-    );
-  }
-}
-
-export default Footer;
+export default () => (
+  <DefaultFooter
+    copyright="2020 蚂蚁集团体验技术部出品"
+    links={[
+      {
+        key: 'Ant Design Pro',
+        title: 'Ant Design Pro',
+        href: 'https://pro.ant.design',
+        blankTarget: true,
+      },
+      {
+        key: 'github',
+        title: <GithubOutlined />,
+        href: 'https://github.com/ant-design/ant-design-pro',
+        blankTarget: true,
+      },
+      {
+        key: 'Ant Design',
+        title: 'Ant Design',
+        href: 'https://ant.design',
+        blankTarget: true,
+      },
+    ]}
+  />
+);

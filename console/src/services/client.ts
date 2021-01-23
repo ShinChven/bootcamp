@@ -6,7 +6,7 @@ const http = require('superagent');
 
 export const devNSP = 'http://localhost:3030'; // 本机
 
-export const authStorageKey = 'bootcamp-auth';
+export const authStorageKey = 'auth';
 
 let socket = io(); // 生产环境下访问本机
 if (window.location.hostname === 'localhost') {
@@ -63,5 +63,5 @@ export interface FeathersRESTfulResponse<T> {
   total: number
   limit: number
   skip: number
-  data: Array<T>
+  data: T[]
 }

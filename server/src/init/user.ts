@@ -29,7 +29,8 @@ export default async function (app: Application) {
       });
       const userRawData = {email: user.email, password: user.password || password};
       user.password = await hashPassword(userRawData.password);
-      const initialized = await users.create(user);
+      user.access = 'admin';
+      await users.create(user);
       console.log(`initialized user: ${JSON.stringify(userRawData)}`);
     }
   } catch (e) {

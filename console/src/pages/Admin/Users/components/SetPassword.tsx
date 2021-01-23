@@ -1,0 +1,66 @@
+import React from "react";
+import {Button, Drawer, Form, Input, message} from "antd";
+import {modalFormItemLayout as formItemLayout} from "@/components/common-layout";
+import {EyeInvisibleOutlined, EyeTwoTone} from "@ant-design/icons";
+import type {User} from "@/services/authentication";
+import {usersService} from "@/services/client";
+import {RouteContext} from "@ant-design/pro-layout";
+
+
+export type SetPasswordProps = {
+  visible: boolean
+  onOk: { (): void }
+  onClose: { (): void }
+  user?: User;
+}
+
+const SetPassword: React.FC<SetPasswordProps> = ({user, onClose, onOk, visible}) =>
+  <RouteContext.Consumer>
+    {({isMobile}) => (
+      <Drawer title="Set Password"
+              onClose={() => onClose()}
+              visible={visible}
+              width={isMobile ? '90%' : '500px'}
+      >
+        {user && user.id! > 0 && (
+          <Form onFinish={async ({password}) => {
+            if (user && user.id && user.id > 0) {
+              const result = await usersService.patch(user.id, {password});
+              if (result.id === user.id) {
+                onOk();
+                onClose();
+                message.success('Setting password success');
+              } else {
+                message.error('failed to set password');
+              }
+            }
+          }}>
+            <Form.Item {...formItemLayout} name="email" label="User">
+              <Input hidden disabled type="text" defaultValue={user.email}/>
+              {user.email}
+            </Form.Item>
+            <Form.Item name="password" {...formItemLayout} label="Password" rules={[
+              {
+                required: true,
+                message: 'Password can not be empty'
+              },
+              {
+                pattern: new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,20}$/, "gm"),
+                message: 'Length between 8 and 20, at least 1 upper case character, 1 lower case character and 1 number.'
+              }
+            ]}
+                       hasFeedback
+            >
+              <Input.Password
+                placeholder="Input password..."
+                iconRender={passWordVisible => (passWordVisible ? <EyeTwoTone/> : <EyeInvisibleOutlined/>)}
+              />
+            </Form.Item>
+            <Button htmlType="submit">Submit</Button>
+          </Form>
+        )}
+      </Drawer>
+    )}
+  </RouteContext.Consumer>
+
+export default SetPassword

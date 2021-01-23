@@ -49,7 +49,5 @@ export default {
   'menu.editor.flow': '流程编辑器',
   'menu.editor.mind': '脑图编辑器',
   'menu.editor.koni': '拓扑编辑器',
-  'menu.content_management': '内容',
-  'menu.users': '用户',
-  'menu.comments': '留言评论',
+  'menu.admin.users': '用户',
 };

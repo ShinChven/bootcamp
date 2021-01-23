@@ -28,6 +28,8 @@
       "passwordField": "password"
     }
   },
+  "database": "sqlite",
+  "sqlite": "data/database.sqlite",
   "mysql": "mysql://root:1234@localhost:3306/bootcamp",
   "init": {
     "user": {

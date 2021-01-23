@@ -7,6 +7,7 @@ export interface UserType {
   email: string
   password: string
   enabled?: string
+  access: string
   createdAt?: Date
   updatedAt?: Date
 }
@@ -23,6 +24,11 @@ export default function (app: Application) {
     password: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    access: {
+      type: DataTypes.STRING,
+      defaultValue: 'user',
+      allowNull: false,
     },
     enabled: {
       type: DataTypes.BOOLEAN,
