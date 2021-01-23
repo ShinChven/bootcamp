@@ -2,13 +2,15 @@ import React from 'react';
 import type {Settings as LayoutSettings} from '@ant-design/pro-layout';
 import {PageLoading} from '@ant-design/pro-layout';
 import {notification} from 'antd';
-import type {RequestConfig, RunTimeLayoutConfig} from 'umi';
+import type {RunTimeLayoutConfig} from 'umi';
 import {history} from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import type {ResponseError} from 'umi-request';
 import defaultSettings from '../config/defaultSettings';
 import {User} from "@/services/authentication";
+import {getQueries} from "@/utils/queries";
+import qs from "qs";
 
 /**
  * 获取用户信息比较慢的时候会展示一个 loading
@@ -41,7 +43,7 @@ export const layout: RunTimeLayoutConfig = ({initialState}) => {
       const {location} = history;
       // 如果没有登录，重定向到 login
       if (!initialState?.currentUser && location.pathname !== '/user/login') {
-        history.push('/user/login');
+        history.push(`/user/login?redirect=${encodeURIComponent([location.pathname, qs.stringify(getQueries())].join('?'))}`);
       }
     },
     menuHeaderRender: undefined,
@@ -80,7 +82,8 @@ const errorHandler = (error: ResponseError) => {
     const {status, url} = response;
 
     notification.error({
-      message: `请求错误 ${status}: ${url}`,
+      message: `
+        请求错误 ${status}: ${url}`,
       description: errorText,
     });
   }

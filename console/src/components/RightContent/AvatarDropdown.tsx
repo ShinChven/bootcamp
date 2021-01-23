@@ -2,10 +2,11 @@ import React, {useCallback} from 'react';
 import {LogoutOutlined, SettingOutlined, UserOutlined} from '@ant-design/icons';
 import {Avatar, Menu, Spin} from 'antd';
 import {history, useModel} from 'umi';
-import {stringify} from 'querystring';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 import {logout} from "@/services/authentication";
+import qs from "qs";
+import {getQueries} from "@/utils/queries";
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
@@ -20,12 +21,7 @@ const loginOut = async () => {
   const {redirect} = query as { redirect: string };
   // Note: There may be security issues, please note
   if (window.location.pathname !== '/user/login' && !redirect) {
-    history.replace({
-      pathname: '/user/login',
-      search: stringify({
-        redirect: pathname,
-      }),
-    });
+    history.push(`/user/login?redirect=${encodeURIComponent([pathname, qs.stringify(getQueries())].join('?'))}`);
   }
 };
 
