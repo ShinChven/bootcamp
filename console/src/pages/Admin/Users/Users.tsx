@@ -5,14 +5,14 @@ import client from "@/services/client";
 import pagination from "@/utils/pagination";
 import {useModel} from "@@/plugin-model/useModel";
 import type {User} from "@/services/authentication";
-import {Button, Card, Form, Input, message, Popconfirm, Space, Table} from "antd";
+import {Button, Card, Form, Input, message, Popconfirm, Space, Table, Tooltip} from "antd";
 import type {ColumnProps} from "antd/es/table";
 import {getQueries, swapQueries} from "@/utils/queries";
 import styles from './Users.less';
 import SetPassword from "@/pages/Admin/Users/components/SetPassword";
 import {dateTime} from "@/utils/date-format";
 import EditUserInfoModal from "@/pages/Admin/Users/components/EditUserInfoModal";
-import {PlusCircleFilled} from "@ant-design/icons";
+import {DeleteOutlined, EditOutlined, KeyOutlined, PlusCircleFilled} from "@ant-design/icons";
 
 const Users = () => {
 
@@ -57,6 +57,11 @@ const Users = () => {
       dataIndex: 'email',
     },
     {
+      title: 'access',
+      key: 'access',
+      dataIndex: 'access',
+    },
+    {
       title: 'created at',
       key: 'createdAt',
       dataIndex: 'createdAt',
@@ -67,8 +72,9 @@ const Users = () => {
       key: 'option',
       render: (user: User) => {
         const elements = [
-          <a key="edit_user_info" onClick={() => setUpdateUserInfoTarget(user)}>edit</a>,
-          <a key="set_password" onClick={() => setSetPasswordTarget(user)}>password</a>
+          <Tooltip title={'edit'}><a key="edit_user_info" onClick={() => setUpdateUserInfoTarget(user)}><EditOutlined/></a></Tooltip>,
+          <Tooltip title={'set password'}><a key="set_password"
+                                             onClick={() => setSetPasswordTarget(user)}><KeyOutlined/></a></Tooltip>
         ];
         if (initialState?.currentUser?.id !== user.id) {
           elements.push(
@@ -83,7 +89,7 @@ const Users = () => {
                           }
                         }}
             >
-              <a style={{color: 'red'}} key="delete">delete</a>
+              <Tooltip title={'delete user'}><a style={{color: 'red'}} key="delete"><DeleteOutlined/></a></Tooltip>
             </Popconfirm>
           )
         }
@@ -96,7 +102,10 @@ const Users = () => {
 
   return <PageContainer>
     <Card
-      extra={<Button onClick={() => setAddUserVisible(true)}><PlusCircleFilled/></Button>}
+      extra={<Tooltip title={'add user'}><Button
+        type={"primary"}
+        onClick={() => setAddUserVisible(true)}><PlusCircleFilled/>
+      </Button></Tooltip>}
       className={styles.CardSearchForm}
       loading={loading} title={<Form
       onFinish={(value) => {
@@ -121,6 +130,7 @@ const Users = () => {
       />
     </Card>
     <EditUserInfoModal
+      key={'add_user_form'}
       visible={addUserVisible}
       onOk={() => {
 
@@ -130,6 +140,7 @@ const Users = () => {
       }}
     />
     <EditUserInfoModal
+      key={'update_user_form'}
       user={updateUserInfoTarget}
       visible={updateUserInfoTarget !== undefined}
       onOk={() => {
@@ -140,6 +151,7 @@ const Users = () => {
       }}
     />
     <SetPassword
+      key={'set_password_form'}
       user={setPasswordTarget}
       visible={setPasswordTarget !== undefined}
       onOk={() => {
