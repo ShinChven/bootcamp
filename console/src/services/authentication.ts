@@ -1,5 +1,8 @@
 import type {ErrorResponse} from "@/services/client";
 import client from "@/services/client";
+import {history} from "@@/core/history";
+import qs from "qs";
+import {getQueries} from "@/utils/queries";
 
 
 export interface Authentication {
@@ -35,3 +38,7 @@ export const authenticate = async (params: IAuthenticateParams):
 export const reAuthenticate = async () => client.reAuthenticate();
 
 export const logout = async () => client.logout()
+
+export const navigateToLogin = ()=>{
+  history.push(`/user/login?redirect=${encodeURIComponent([history.location.pathname, qs.stringify(getQueries())].join('?'))}`);
+}

@@ -8,9 +8,10 @@ import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import type {ResponseError} from 'umi-request';
 import defaultSettings from '../config/defaultSettings';
-import {User} from "@/services/authentication";
-import {getQueries} from "@/utils/queries";
-import qs from "qs";
+import type {User} from "@/services/authentication";
+import {navigateToLogin, reAuthenticate} from "@/services/authentication";
+import {authStorageKey} from "@/services/client";
+import type {RequestConfig} from "@@/plugin-request/request";
 
 /**
  * 获取用户信息比较慢的时候会展示一个 loading
@@ -34,7 +35,7 @@ export async function getInitialState(): Promise<{
   };
 }
 
-export const layout: RunTimeLayoutConfig = ({initialState}) => {
+export const layout: RunTimeLayoutConfig = ({initialState, setInitialState}) => {
   return {
     rightContentRender: () => <RightContent/>,
     disableContentMargin: false,
@@ -43,7 +44,25 @@ export const layout: RunTimeLayoutConfig = ({initialState}) => {
       const {location} = history;
       // 如果没有登录，重定向到 login
       if (!initialState?.currentUser && location.pathname !== '/user/login') {
-        history.push(`/user/login?redirect=${encodeURIComponent([location.pathname, qs.stringify(getQueries())].join('?'))}`);
+        const accessToken = localStorage.getItem(authStorageKey);
+        if (accessToken) { // 如果用户已经登录过了使用 access token 执行重新登录
+          reAuthenticate().then(({user}) => {
+            if (user && user.id > 0) {
+              setInitialState({
+                ...initialState,
+                currentUser: user,
+              });
+            } else {
+              // navigateToLogin();
+            }
+          }).catch((err) => {
+            // eslint-disable-next-line no-console
+            console.error(err)
+            // navigateToLogin()
+          })
+        } else {
+          navigateToLogin()
+        }
       }
     },
     menuHeaderRender: undefined,

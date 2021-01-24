@@ -1,14 +1,13 @@
 import {LockTwoTone, UserOutlined,} from '@ant-design/icons';
 import {Alert, message} from 'antd';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import ProForm, {ProFormText} from '@ant-design/pro-form';
 import {FormattedMessage, history, Link, SelectLang, useIntl, useModel} from 'umi';
 import Footer from '@/components/Footer';
 
 import styles from './index.less';
 import type {IAuthenticateParams, IAuthenticationResponse} from "@/services/authentication";
-import {authenticate, reAuthenticate} from "@/services/authentication";
-import {authStorageKey} from "@/services/client";
+import {authenticate} from "@/services/authentication";
 
 const LoginMessage: React.FC<{
   content: string;
@@ -28,16 +27,12 @@ const LoginMessage: React.FC<{
  */
 const goto = () => {
   if (!history) return;
-  setTimeout(() => {
-    const {query} = history.location;
-    const {redirect} = query as { redirect: string };
-    history.push(redirect || '/');
-  }, 10);
+  const {query} = history.location;
+  const {redirect} = query as { redirect: string };
+  history.push(redirect || '/');
 };
 
 const Login: React.FC = () => {
-  const accessToken = localStorage.getItem(authStorageKey)
-  const [reAuthenticating, setReAuthenticating] = useState(accessToken !== null);
   const [submitting, setSubmitting] = useState(false);
   const [userLoginState, setUserLoginState] = useState<API.LoginStateType>({});
   const {initialState, setInitialState} = useModel('@@initialState');
@@ -57,6 +52,7 @@ const Login: React.FC = () => {
           currentUser: response.user,
         });
         goto();
+        console.log('manual login')
       } else {
         setUserLoginState({status: 'error', type: 'account'});
       }
@@ -68,28 +64,6 @@ const Login: React.FC = () => {
     setSubmitting(false);
   };
   const {status, type: loginType} = userLoginState;
-
-  useEffect(() => {
-
-    if (accessToken) {
-      reAuthenticate().then(authResp => {
-        if (authResp?.user?.id && authResp.user.id > 0) {
-          setInitialState({
-            ...initialState,
-            currentUser: authResp.user,
-          });
-          goto();
-        }
-        // eslint-disable-next-line no-console
-      }).catch(() => {
-        setReAuthenticating(false);
-      });
-    }
-  }, [accessToken]);
-
-  if (reAuthenticating) {
-    return <></>
-  }
 
   return (
     <div className={styles.container}>
