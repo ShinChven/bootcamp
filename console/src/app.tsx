@@ -9,7 +9,7 @@ import Footer from '@/components/Footer';
 import type {ResponseError} from 'umi-request';
 import defaultSettings from '../config/defaultSettings';
 import type {User} from "@/services/authentication";
-import {navigateToLogin, reAuthenticate} from "@/services/authentication";
+import {logout, navigateToLogin, reAuthenticate} from "@/services/authentication";
 import {authStorageKey} from "@/services/client";
 import type {RequestConfig} from "@@/plugin-request/request";
 
@@ -42,11 +42,12 @@ export const layout: RunTimeLayoutConfig = ({initialState, setInitialState}) => 
     footerRender: () => <Footer/>,
     onPageChange: () => {
       const {location} = history;
-      // 如果没有登录，重定向到 login
+      // If user isn't authenticated
       if (!initialState?.currentUser && location.pathname !== '/user/login') {
         const accessToken = localStorage.getItem(authStorageKey);
         if (accessToken) { // 如果用户已经登录过了使用 access token 执行重新登录
-          reAuthenticate().then(({user}) => {
+          reAuthenticate().then((authResp) => {
+            const {user} = authResp;
             if (user && user.id > 0) {
               setInitialState({
                 ...initialState,
@@ -58,7 +59,11 @@ export const layout: RunTimeLayoutConfig = ({initialState, setInitialState}) => 
           }).catch((err) => {
             // eslint-disable-next-line no-console
             console.error(err)
-            // navigateToLogin()
+            if (err.code === 404 || err.code === 401) { // if user is not found or access denied
+              // log user out
+              logout().then();
+              navigateToLogin()
+            }
           })
         } else {
           navigateToLogin()

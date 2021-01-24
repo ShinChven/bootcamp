@@ -4,9 +4,7 @@ import {Avatar, Menu, Spin} from 'antd';
 import {history, useModel} from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
-import {logout} from "@/services/authentication";
-import qs from "qs";
-import {getQueries} from "@/utils/queries";
+import {logout, navigateToLogin} from "@/services/authentication";
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
@@ -17,11 +15,11 @@ export type GlobalHeaderRightProps = {
  */
 const loginOut = async () => {
   await logout();
-  const {query, pathname} = history.location;
+  const {query} = history.location;
   const {redirect} = query as { redirect: string };
   // Note: There may be security issues, please note
-  if (window.location.pathname !== '/user/login' && !redirect) {
-    history.push(`/user/login?redirect=${encodeURIComponent([pathname, qs.stringify(getQueries())].join('?'))}`);
+  if (history.location.pathname !== '/user/login' && !redirect) {
+    navigateToLogin();
   }
 };
 
@@ -38,7 +36,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({menu}) => {
       const {key} = event;
       if (key === 'logout' && initialState) {
         setInitialState({...initialState, currentUser: undefined});
-        loginOut();
+        loginOut().then();
         return;
       }
       history.push(`/account/${key}`);
