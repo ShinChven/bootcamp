@@ -11,8 +11,8 @@ import {getQueries, swapQueries} from "@/utils/queries";
 import styles from './Users.less';
 import SetPassword from "@/pages/Admin/Users/components/SetPassword";
 import {dateTime} from "@/utils/date-format";
-import EditUserInfoModal from "@/pages/Admin/Users/components/EditUserInfoModal";
 import {DeleteOutlined, EditOutlined, KeyOutlined, PlusCircleFilled} from "@ant-design/icons";
+import EditUser from "@/pages/Admin/Users/components/EditUser";
 
 const Users = () => {
 
@@ -70,29 +70,34 @@ const Users = () => {
     {
       title: 'options',
       key: 'option',
+      align: 'right',
       render: (user: User) => {
+        const isCurrentUser = initialState?.currentUser?.id === user.id
         const elements = [
-          <Tooltip title={'edit'}><a key="edit_user_info" onClick={() => setUpdateUserInfoTarget(user)}><EditOutlined/></a></Tooltip>,
-          <Tooltip title={'set password'}><a key="set_password"
-                                             onClick={() => setSetPasswordTarget(user)}><KeyOutlined/></a></Tooltip>
+          <Tooltip key="edit_user_info" title={'Edit user'}><a
+            onClick={() => setUpdateUserInfoTarget(user)}><EditOutlined/></a></Tooltip>,
+          <Tooltip key="set_password" title={'Set password'}><a
+            onClick={() => setSetPasswordTarget(user)}><KeyOutlined/></a></Tooltip>
         ];
-        if (initialState?.currentUser?.id !== user.id) {
-          elements.push(
-            <Popconfirm title="Are you sure to delete this user?"
-                        onConfirm={async () => {
-                          const result = await client.service('/api/users').remove(user.id);
-                          setRemoved(user.id!);
-                          if (user.id === result?.id) {
-                            message.success('User removed');
-                          } else {
-                            message.error('Failed to remove user.');
-                          }
-                        }}
-            >
-              <Tooltip title={'delete user'}><a style={{color: 'red'}} key="delete"><DeleteOutlined/></a></Tooltip>
-            </Popconfirm>
-          )
-        }
+        elements.push(
+          <Popconfirm title="Are you sure to delete this user?"
+                      disabled={isCurrentUser}
+                      onConfirm={async () => {
+                        const result = await client.service('/api/users').remove(user.id);
+                        setRemoved(user.id!);
+                        if (user.id === result?.id) {
+                          message.success('User removed');
+                        } else {
+                          message.error('Failed to remove user.');
+                        }
+                      }}
+                      key="delete"
+          >
+            <Tooltip title={isCurrentUser ? 'Cannot delete yourself' : 'Delete user'}><a
+              style={{color: isCurrentUser ? 'lightgrey' : 'red'}}
+            ><DeleteOutlined/></a></Tooltip>
+          </Popconfirm>
+        )
         return <Space>
           {elements}
         </Space>;
@@ -102,34 +107,33 @@ const Users = () => {
 
   return <PageContainer>
     <Card
-      extra={<Tooltip title={'add user'}><Button
-        type={"primary"}
-        onClick={() => setAddUserVisible(true)}><PlusCircleFilled/>
-      </Button></Tooltip>}
+      extra={<Tooltip title={'add user'}>
+        <Button type={"primary"} onClick={() => setAddUserVisible(true)}><PlusCircleFilled/>
+        </Button>
+      </Tooltip>}
       className={styles.CardSearchForm}
-      loading={loading} title={<Form
-      onFinish={(value) => {
+      loading={loading}
+      title={<Form onFinish={(value) => {
         swapQueries({keyword: value.keyword === '' ? undefined : value.keyword});
       }}>
-      <Form.Item
-        label="Search" name="keyword" initialValue={keyword}>
-        <Input
-          allowClear={true}
-          onChange={(e) => {
-            if (e.target.value === '') {
-              swapQueries({keyword: undefined});
-            }
-          }}
-          disabled={loading} style={{maxWidth: '300px'}} placeholder="Type in keyword and press enter"/>
-      </Form.Item>
-    </Form>}>
-      <Table
-        rowKey='id'
-        columns={columns}
-        dataSource={users}
+        <Form.Item
+          label="Search" name="keyword" initialValue={keyword}>
+          <Input allowClear={true}
+                 onChange={(e) => {
+                   if (e.target.value === '') {
+                     swapQueries({keyword: undefined});
+                   }
+                 }}
+                 disabled={loading}
+                 style={{maxWidth: '300px'}}
+                 placeholder="Type in keyword and press enter"/>
+        </Form.Item>
+      </Form>
+      }>
+      <Table rowKey='id' columns={columns} dataSource={users}
       />
     </Card>
-    <EditUserInfoModal
+    <EditUser
       key={'add_user_form'}
       visible={addUserVisible}
       onOk={() => {
@@ -139,7 +143,7 @@ const Users = () => {
         setAddUserVisible(false)
       }}
     />
-    <EditUserInfoModal
+    <EditUser
       key={'update_user_form'}
       user={updateUserInfoTarget}
       visible={updateUserInfoTarget !== undefined}

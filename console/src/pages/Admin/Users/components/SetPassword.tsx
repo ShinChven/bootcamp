@@ -1,5 +1,5 @@
-import React from "react";
-import {Button, Drawer, Form, Input, message} from "antd";
+import React, {useState} from "react";
+import {Button, Col, Drawer, Form, Input, message, Row} from "antd";
 import {modalFormItemLayout as formItemLayout} from "@/components/common-layout";
 import {EyeInvisibleOutlined, EyeTwoTone} from "@ant-design/icons";
 import type {User} from "@/services/authentication";
@@ -14,8 +14,10 @@ export type SetPasswordProps = {
   user?: User;
 }
 
-const SetPassword: React.FC<SetPasswordProps> = ({user, onClose, onOk, visible}) =>
-  <RouteContext.Consumer>
+const SetPassword: React.FC<SetPasswordProps> = ({user, onClose, onOk, visible}) => {
+  const [loading, setLoading] = useState<boolean>(false);
+
+  return <RouteContext.Consumer>
     {({isMobile}) => (
       <Drawer title="Set Password"
               onClose={() => onClose()}
@@ -25,14 +27,21 @@ const SetPassword: React.FC<SetPasswordProps> = ({user, onClose, onOk, visible})
         {user && user.id! > 0 && (
           <Form onFinish={async ({password}) => {
             if (user && user.id && user.id > 0) {
-              const result = await usersService.patch(user.id, {password});
-              if (result.id === user.id) {
-                onOk();
-                onClose();
-                message.success('Setting password success');
-              } else {
-                message.error('failed to set password');
+              setLoading(true)
+              try {
+                const result = await usersService.patch(user.id, {password});
+                if (result.id === user.id) {
+                  onOk();
+                  onClose();
+                  message.success('Setting password success');
+                } else {
+                  message.error('failed to set password');
+                }
+              } catch (e) {
+                console.error(e)
+                message.error('failed to set password')
               }
+              setLoading(false)
             }
           }}>
             <Form.Item {...formItemLayout} name="email" label="User">
@@ -56,11 +65,17 @@ const SetPassword: React.FC<SetPasswordProps> = ({user, onClose, onOk, visible})
                 iconRender={passWordVisible => (passWordVisible ? <EyeTwoTone/> : <EyeInvisibleOutlined/>)}
               />
             </Form.Item>
-            <Button htmlType="submit">Submit</Button>
+            <Row gutter={12}>
+              <Col span={12}><Button style={{width: '100%'}} onClick={() => onClose()}>Cancel</Button></Col>
+              <Col span={12}><Button type={"primary"} style={{width: '100%'}} loading={loading}
+                                     htmlType={"submit"}>Submit</Button>
+              </Col>
+            </Row>
           </Form>
         )}
       </Drawer>
     )}
-  </RouteContext.Consumer>
+  </RouteContext.Consumer>;
+}
 
 export default SetPassword
