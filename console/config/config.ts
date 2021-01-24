@@ -13,7 +13,7 @@ export default defineConfig({
     hmr: true,
   },
   layout: {
-    name: 'Ant Design Pro',
+    name: 'Atlassc Bootcamp',
     locale: true,
     siderWidth: 208,
     ...defaultSettings,
@@ -44,6 +44,6 @@ export default defineConfig({
   manifest: {
     basePath: '/',
   },
-  publicPath:'/console/',
+  publicPath: '/console/',
   base: '/console',
 });

@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Button, Col, Drawer, Form, Input, message, Row} from "antd";
+import {Button, Col, Drawer, Form, Input, message, Row, Select} from "antd";
 import type {User} from "@/services/authentication";
 import {RouteContext} from "@ant-design/pro-layout";
 import {modalFormItemLayout as formItemLayout} from "@/components/common-layout";
@@ -35,12 +35,12 @@ const EditUser: React.FC<UpdateUserInfoProps> = ({visible, onOk, onClose, user})
   const onFinish = async (values: Record<string, any>) => {
     setLoading(true)
     try {
-      const {username, name, phoneNumber, email, password} = values;
+      const {username, name, phoneNumber, email, password, access} = values;
       let result
       if (user && user.id && user.id > 0) {
-        result = await usersService.patch(user.id, {username, name, phoneNumber, email});
+        result = await usersService.patch(user.id, {username, name, phoneNumber, email, access});
       } else {
-        result = await usersService.create({username, name, phoneNumber, email, password});
+        result = await usersService.create({username, name, phoneNumber, email, password, access});
       }
       if (result?.id > 0) {
         message.success('success')
@@ -71,6 +71,12 @@ const EditUser: React.FC<UpdateUserInfoProps> = ({visible, onOk, onClose, user})
                      initialValue={user?.email}
           >
             <Input type="text" placeholder="Input email address"/>
+          </Form.Item>
+          <Form.Item initialValue={user?.access || 'user'} label={'Access'} name={'access'}>
+            <Select>
+              <Select.Option value={'admin'}>admin</Select.Option>
+              <Select.Option value={'user'}>user</Select.Option>
+            </Select>
           </Form.Item>
 
           {!user &&
