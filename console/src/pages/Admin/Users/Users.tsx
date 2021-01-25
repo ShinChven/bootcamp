@@ -16,7 +16,13 @@ import EditUser from "@/pages/Admin/Users/components/EditUser";
 
 const Users = () => {
 
-  const {initialState} = useModel('@@initialState');
+  // 声明 Hooks
+  // 只能在`函数`的`最顶层代码`中声明，不能在回调和逻辑运算中声明
+  // https://zh-hans.reactjs.org/docs/hooks-rules.html#only-call-hooks-at-the-top-level
+  // 因为 React Hook 非常依赖声明的顺序，每次 Render 的时候会根据声明的顺序来引用/重用声明的 React Hook
+
+  // 声明 useState Hook
+  // https://zh-hans.reactjs.org/docs/hooks-state.html
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [setPasswordTarget, setSetPasswordTarget] = useState<User | undefined>(undefined);
@@ -24,12 +30,21 @@ const Users = () => {
   const [addUserVisible, setAddUserVisible] = useState<boolean>(false);
   const [removed, setRemoved] = useState<number>(0)
 
+  // 声明 自定义 Hook
+  // @umijs/plugin-model useModel 可以像 model 一样存取全局的 state
+  const {
+    initialState, // 获取 initialState 这个命名空间中的 state
+    // setInitialState, // 设置 initialState 这个命名空间中的 state
+  } = useModel('@@initialState');
+
   const {
     page = 1,
     keyword,
     limit = 10,
   } = getQueries<{ page?: number, keyword?: string, limit?: number }>({'page': 'number', 'limit': 'number'});
 
+  // 使用 effect 请求数据。 默认每次 setState 都会执行
+  // https://zh-hans.reactjs.org/docs/hooks-effect.html
   useEffect(() => {
     setLoading(true);
     const query: { $limit: number, $skip: number, email?: { $like: string } } = {
@@ -48,6 +63,7 @@ const Users = () => {
     }).catch(() => {
       setLoading(false);
     });
+    // 通过绑定参数，控制 effect 只有在参数发生变化的时候才执行。
   }, [page, keyword, limit, updateUserInfoTarget, addUserVisible, removed]);
 
   const columns: ColumnProps<User>[] = [
