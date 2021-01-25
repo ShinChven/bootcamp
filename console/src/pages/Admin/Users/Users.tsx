@@ -102,9 +102,7 @@ const Users = () => {
           <Tooltip key="edit_user_info" title={'Edit user'}><a
             onClick={() => setUpdateUserInfoTarget(user)}><EditOutlined/></a></Tooltip>,
           <Tooltip key="set_password" title={'Set password'}><a
-            onClick={() => setSetPasswordTarget(user)}><KeyOutlined/></a></Tooltip>
-        ];
-        elements.push(
+            onClick={() => setSetPasswordTarget(user)}><KeyOutlined/></a></Tooltip>,
           <Popconfirm title="Are you sure to delete this user?"
                       disabled={isCurrentUser}
                       onConfirm={async () => {
@@ -124,7 +122,7 @@ const Users = () => {
               style={{color: isCurrentUser ? 'lightgrey' : 'red'}}
             ><DeleteOutlined/></a></Tooltip>
           </Popconfirm>
-        )
+        ];
         return <Space>
           {elements}
         </Space>;
