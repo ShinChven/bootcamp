@@ -14,6 +14,14 @@ import {dateTime} from "@/utils/date-format";
 import {DeleteOutlined, EditOutlined, KeyOutlined, PlusCircleFilled} from "@ant-design/icons";
 import EditUser from "@/pages/Admin/Users/components/EditUser";
 
+// React Hook 文档
+// https://zh-hans.reactjs.org/docs/hooks-intro.html
+
+/**
+ * Manage Users
+ * /api/users
+ * @constructor
+ */
 const Users = () => {
 
   // 声明 Hooks
@@ -88,6 +96,7 @@ const Users = () => {
       key: 'option',
       align: 'right',
       render: (user: User) => {
+        // 通过 initialState 获取全局/model 中的已登录用户信息
         const isCurrentUser = initialState?.currentUser?.id === user.id
         const elements = [
           <Tooltip key="edit_user_info" title={'Edit user'}><a
@@ -100,6 +109,8 @@ const Users = () => {
                       disabled={isCurrentUser}
                       onConfirm={async () => {
                         const result = await client.service('/api/users').remove(user.id);
+                        // removed 这个 state 被绑定到获取 Users 的 effect 中
+                        // 更改这个 removed 以触发数据刷新
                         setRemoved(user.id!);
                         if (user.id === result?.id) {
                           message.success('User removed');
