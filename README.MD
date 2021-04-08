@@ -1,6 +1,6 @@
 # Bootcamp
 
-This is my own scaffolding for building JavaScript fullstack enterprise webapp.
+This is my own scaffolding for building TypeScript fullstack enterprise webapp.
 
 It is made of a nodejs backend in server folder and a react web client in console folder.
 
